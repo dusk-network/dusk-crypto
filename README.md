@@ -1,4 +1,3 @@
-[Forwarded from Toghrul Maharramov]
 ## dusk-crypto: Cryptography Module
 ### Overview
 #### BN-256
