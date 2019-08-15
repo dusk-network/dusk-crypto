@@ -3,8 +3,8 @@ package innerproduct
 import (
 	"testing"
 
-	"dusk-crypto/rangeproof/pedersen"
-	"dusk-crypto/rangeproof/vector"
+	"github.com/dusk-network/dusk-crypto/rangeproof/pedersen"
+	"github.com/dusk-network/dusk-crypto/rangeproof/vector"
 
 	ristretto "github.com/bwesterb/go-ristretto"
 	"github.com/stretchr/testify/assert"

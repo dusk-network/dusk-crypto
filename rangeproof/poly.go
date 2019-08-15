@@ -5,7 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"dusk-crypto/rangeproof/vector"
+	"github.com/dusk-network/dusk-crypto/rangeproof/vector"
 
 	ristretto "github.com/bwesterb/go-ristretto"
 )

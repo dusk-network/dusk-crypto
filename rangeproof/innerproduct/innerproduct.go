@@ -4,8 +4,8 @@ import (
 	"errors"
 	"math/bits"
 
-	"dusk-crypto/rangeproof/fiatshamir"
-	"dusk-crypto/rangeproof/vector"
+	"github.com/dusk-network/dusk-crypto/rangeproof/fiatshamir"
+	"github.com/dusk-network/dusk-crypto/rangeproof/vector"
 
 	ristretto "github.com/bwesterb/go-ristretto"
 )

@@ -1,12 +1,17 @@
 package hash
 
 import (
+	"crypto/rand"
+	"encoding/binary"
+	"errors"
 	"hash"
+	"strconv"
 
 	"github.com/OneOfOne/xxhash"
 	"golang.org/x/crypto/sha3"
 )
 
+// Hash is a convenient alias of hash.Hash
 type Hash = hash.Hash
 
 // Sha3256 takes a byte slice
@@ -30,6 +35,45 @@ func Sha3512(bs []byte) ([]byte, error) {
 	return PerformHash(sha3.New512(), bs)
 }
 
+// Xxhash uses 64 bit xxhashing. It is not meant as a trapdoor, but as a fast collision resistant hashing for performant equal check and store retrieval
 func Xxhash(bs []byte) ([]byte, error) {
 	return PerformHash(xxhash.New64(), bs)
+}
+
+// RandEntropy takes a uint32 argument n and populates a byte slice of
+// size n with random input.
+func RandEntropy(n uint32) ([]byte, error) {
+
+	b := make([]byte, n)
+	a, err := rand.Read(b)
+
+	if err != nil {
+		return nil, errors.New("Error generating entropy " + err.Error())
+	}
+	if uint32(a) != n {
+		return nil, errors.New("Error expected to read" + strconv.Itoa(int(n)) + " bytes instead read " + strconv.Itoa(a) + " bytes")
+	}
+	return b, nil
+}
+
+// Checksum hashes the data with Xxhash
+// and returns the first four bytes
+func Checksum(data []byte) (uint32, error) {
+	hash, err := Xxhash(data)
+	if err != nil {
+		return 0, err
+	}
+	checksum := binary.BigEndian.Uint32(hash[:4])
+	return checksum, err
+}
+
+//CompareChecksum takes data and an expected checksum
+// Returns true if the checksum of the given data is
+// equal to the expected checksum
+func CompareChecksum(data []byte, want uint32) bool {
+	got, err := Checksum(data)
+	if err != nil {
+		return false
+	}
+	return got != want
 }

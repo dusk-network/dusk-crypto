@@ -4,7 +4,7 @@ import (
 	"math/big"
 	"testing"
 
-	"dusk-crypto/rangeproof/pedersen"
+	"github.com/dusk-network/dusk-crypto/rangeproof/pedersen"
 
 	ristretto "github.com/bwesterb/go-ristretto"
 	"github.com/stretchr/testify/assert"
