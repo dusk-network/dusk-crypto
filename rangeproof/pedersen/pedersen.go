@@ -1,7 +1,7 @@
 package pedersen
 
 import (
-	generator "dusk-crypto/rangeproof/generators"
+	generator "github.com/dusk-network/dusk-crypto/rangeproof/generators"
 
 	ristretto "github.com/bwesterb/go-ristretto"
 )

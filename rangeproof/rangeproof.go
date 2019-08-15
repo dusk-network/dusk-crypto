@@ -5,10 +5,10 @@ import (
 
 	"github.com/pkg/errors"
 
-	"dusk-crypto/rangeproof/fiatshamir"
-	"dusk-crypto/rangeproof/innerproduct"
-	"dusk-crypto/rangeproof/pedersen"
-	"dusk-crypto/rangeproof/vector"
+	"github.com/dusk-network/dusk-crypto/rangeproof/fiatshamir"
+	"github.com/dusk-network/dusk-crypto/rangeproof/innerproduct"
+	"github.com/dusk-network/dusk-crypto/rangeproof/pedersen"
+	"github.com/dusk-network/dusk-crypto/rangeproof/vector"
 
 	ristretto "github.com/bwesterb/go-ristretto"
 )
