@@ -14,7 +14,7 @@ import (
 	"io"
 	"math/big"
 
-	"github.com/dusk-network/dusk-crypto/bn256"
+	"github.com/dusk-network/bn256"
 	"github.com/dusk-network/dusk-crypto/hash"
 
 	"github.com/pkg/errors"
