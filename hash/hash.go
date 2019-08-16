@@ -56,6 +56,20 @@ func RandEntropy(n uint32) ([]byte, error) {
 	return b, nil
 }
 
+//CompareChecksum takes data and an expected checksum
+// Returns true if the checksum of the given data is
+// equal to the expected checksum
+func CompareChecksum(data []byte, want uint32) bool {
+	got, err := Checksum(data)
+	if err != nil {
+		return false
+	}
+	if got != want {
+		return false
+	}
+	return true
+}
+
 // Checksum hashes the data with Xxhash
 // and returns the first four bytes
 func Checksum(data []byte) (uint32, error) {
@@ -65,15 +79,4 @@ func Checksum(data []byte) (uint32, error) {
 	}
 	checksum := binary.BigEndian.Uint32(hash[:4])
 	return checksum, err
-}
-
-//CompareChecksum takes data and an expected checksum
-// Returns true if the checksum of the given data is
-// equal to the expected checksum
-func CompareChecksum(data []byte, want uint32) bool {
-	got, err := Checksum(data)
-	if err != nil {
-		return false
-	}
-	return got != want
 }
