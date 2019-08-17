@@ -238,6 +238,8 @@ func SplitPoints(x []ristretto.Point, n uint32) ([]ristretto.Point, []ristretto.
 
 // SplitScalars will split a slice x using n
 // Result will be two slices a and b where a = [0,n) and b = [n, len(x))
+// Method same as above
+// XXX: use unit test to make sure they output same sizes
 func SplitScalars(x []ristretto.Scalar, n uint32) ([]ristretto.Scalar, []ristretto.Scalar, error) {
 	if len(x) <= 0 {
 		return nil, nil, errors.New("Original vector has length of zero")

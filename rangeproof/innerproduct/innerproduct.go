@@ -1,13 +1,15 @@
 package innerproduct
 
 import (
+	"bytes"
+	"encoding/binary"
 	"errors"
+	"io"
 	"math/bits"
 
+	ristretto "github.com/bwesterb/go-ristretto"
 	"github.com/dusk-network/dusk-crypto/rangeproof/fiatshamir"
 	"github.com/dusk-network/dusk-crypto/rangeproof/vector"
-
-	ristretto "github.com/bwesterb/go-ristretto"
 )
 
 // This is a reference of the innerProduct implementation at rust
@@ -23,6 +25,8 @@ type Proof struct {
 func Generate(GVec, HVec []ristretto.Point, aVec, bVec, HprimeFactors []ristretto.Scalar, Q ristretto.Point) (*Proof, error) {
 	n := uint32(len(GVec))
 
+	// XXX : When n is not a power of two, will the bulletproof struct pad it
+	// or will the inner product proof struct?
 	if !isPower2(uint32(n)) {
 		return nil, errors.New("[IPProof]: size of n (NM) is not a power of 2")
 	}
@@ -386,6 +390,105 @@ func (proof *Proof) Verify(G, H, L, R []ristretto.Point, HprimeFactor []ristrett
 	return have.Equals(&P)
 }
 
+func (p *Proof) Encode(w io.Writer) error {
+
+	err := binary.Write(w, binary.BigEndian, p.A.Bytes())
+	if err != nil {
+		return err
+	}
+	err = binary.Write(w, binary.BigEndian, p.B.Bytes())
+	if err != nil {
+		return err
+	}
+	lenL := uint32(len(p.L))
+
+	for i := uint32(0); i < lenL; i++ {
+		err = binary.Write(w, binary.BigEndian, p.L[i].Bytes())
+		if err != nil {
+			return err
+		}
+		err = binary.Write(w, binary.BigEndian, p.R[i].Bytes())
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (p *Proof) Decode(r io.Reader) error {
+	if p == nil {
+		return errors.New("struct is nil")
+	}
+
+	var ABytes, BBytes [32]byte
+	err := binary.Read(r, binary.BigEndian, &ABytes)
+	if err != nil {
+		return err
+	}
+	err = binary.Read(r, binary.BigEndian, &BBytes)
+	if err != nil {
+		return err
+	}
+	p.A.SetBytes(&ABytes)
+	p.B.SetBytes(&BBytes)
+
+	buf := &bytes.Buffer{}
+	_, err = buf.ReadFrom(r)
+	if err != nil {
+		return err
+	}
+	numBytes := len(buf.Bytes())
+	if numBytes%32 != 0 {
+		return errors.New("proof was not formatted correctly")
+	}
+	lenL := uint32(numBytes / 64)
+
+	p.L = make([]ristretto.Point, lenL)
+	p.R = make([]ristretto.Point, lenL)
+
+	for i := uint32(0); i < lenL; i++ {
+		var LBytes, RBytes [32]byte
+		err = binary.Read(buf, binary.BigEndian, &LBytes)
+		if err != nil {
+			return err
+		}
+		err = binary.Read(buf, binary.BigEndian, &RBytes)
+		if err != nil {
+			return err
+		}
+		p.L[i].SetBytes(&LBytes)
+		p.R[i].SetBytes(&RBytes)
+	}
+
+	return nil
+}
+
+func (p *Proof) Equals(other Proof) bool {
+	ok := p.A.Equals(&other.A)
+	if !ok {
+		return ok
+	}
+
+	ok = p.B.Equals(&other.B)
+	if !ok {
+		return ok
+	}
+
+	for i := range p.L {
+		ok := p.L[i].Equals(&other.L[i])
+		if !ok {
+			return ok
+		}
+
+		ok = p.R[i].Equals(&other.R[i])
+		if !ok {
+			return ok
+		}
+	}
+
+	return ok
+}
+
 func nextPow2(n uint) uint {
 	n--
 	n |= n >> 1
@@ -398,4 +501,10 @@ func nextPow2(n uint) uint {
 
 func isPower2(n uint32) bool {
 	return (n & (n - 1)) == 0
+}
+
+func DiffNextPow2(n uint32) uint32 {
+	pow2 := nextPow2(uint(n))
+	padAmount := uint32(pow2) - n + 1
+	return padAmount
 }

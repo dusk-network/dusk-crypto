@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	ristretto "github.com/bwesterb/go-ristretto"
-	"github.com/stretchr/testify/assert"
 	generator "github.com/dusk-network/dusk-crypto/rangeproof/generators"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGeneratorsLen(t *testing.T) {

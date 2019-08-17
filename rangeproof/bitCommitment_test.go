@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/dusk-network/dusk-crypto/rangeproof"
-
 	"github.com/stretchr/testify/assert"
 )
 
