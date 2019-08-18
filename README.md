@@ -1,10 +1,10 @@
 ## dusk-crypto: Cryptography Module
 ### Overview
 #### BN-256
-Optimal ate pairing over 256 bit Barretto-Naehrig curves providing approximately 96 bits of security [1]. Dusk Network BN-256 library has been forked from the Golang Crypto [repository]( https://github.com/golang/crypto/tree/master/bn256) with an addition of point compression method.
+Optimal ate pairing over 256 bit Barretto-Naehrig curves providing approximately 96 bits of security [1]. Dusk Network BN-256 library can be found [here](https://github.com/dusk-network/bn256).
 
 #### BLS
-Boneh-Lynn-Shacham signatures use BN256 to provide a short aggregateable signature scheme [2]. Trivially since signatures are elements of an elliptic curve, they are short and since elliptic curves do not have a ring structure, they are not susceptible to index-calculus attacks. Dusk Network BLS library has been forked from the Vuvuzela Crypto [repository](https://github.com/vuvuzela/crypto/blob/master/bls) with additions of rogue-key attack mitigation, public key aggregation and a hash to curve methods.
+Boneh-Lynn-Shacham signatures use BN256 to provide a short aggregateable signature scheme [2]. Trivially since signatures are elements of an elliptic curve, they are short and since elliptic curves do not have a ring structure, they are not susceptible to index-calculus attacks. Dusk Network BLS library has been inspired by the Vuvuzela Crypto [repository](https://github.com/vuvuzela/crypto/blob/master/bls) with additions of rogue-key attack mitigation, public key aggregation and a hash to curve methods.
 
 #### bLSAG
 A linkable ring signature scheme whose security is based on the Discrete Logarithm Problem [3]. The signature size grows linearly with the number of members in the ring. This is a zero knowledge proof where we prove that at most one member from the ring has signed a given message from the provided public keys, without revealing which member has signed.
