@@ -291,73 +291,112 @@ func TestAmbiguousCompress(t *testing.T) {
 
 func BenchmarkSign(b *testing.B) {
 	msg := randomMessage()
-	pk, sk, _ := GenKeyPair(rand.Reader)
+	b.StopTimer()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
+		pk, sk, _ := GenKeyPair(rand.Reader)
+
 		b.StartTimer()
 		_, _ = Sign(sk, pk, msg)
 		b.StopTimer()
-		//if err := Verify(NewApk(pk), msg, sigma); err != nil {
-		//	panic(err)
-		//}
-
 	}
 }
 
-func BenchmarkVerify(b *testing.B) {
-	msg := randomMessage()
-	for i := 0; i < b.N; i++ {
-		b.StopTimer()
-		pk, sk, _ := GenKeyPair(rand.Reader)
-		signature, _ := Sign(sk, pk, msg)
-		b.StartTimer()
-		if err := Verify(NewApk(pk), msg, signature); err != nil {
-			panic(err)
-		}
-	}
-}
+func aggregateXSignatures(b *testing.B, nr int) {
+	var sigmas = make([]*Signature, nr)
+	reader := rand.Reader
+	msg := []byte("Get Funky Tonight")
 
-func BenchmarkVerifyUnsafe(b *testing.B) {
-	msg := randomMessage()
-	for i := 0; i < b.N; i++ {
-		b.StopTimer()
-		pk, sk, _ := GenKeyPair(rand.Reader)
-		signature, _ := UnsafeSign(sk, msg)
-		b.StartTimer()
-		if err := VerifyUnsafe(pk, msg, signature); err != nil {
-			panic(err)
-		}
+	for i := 0; i < nr; i++ {
+		pk, sk, _ := GenKeyPair(reader)
+		sigmas[i], _ = Sign(sk, pk, msg)
 	}
-}
 
-func BenchmarkVerifyCompressedSignature(b *testing.B) {
-	msg := randomMessage()
+	s, sigmas := sigmas[0], sigmas[1:]
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
+		for _, sig := range sigmas {
+			s = s.Aggregate(sig)
+		}
+	}
+}
+
+func BenchmarkAggregate10Signatures(b *testing.B) {
+	aggregateXSignatures(b, 10)
+}
+
+func BenchmarkAggregate100Signatures(b *testing.B) {
+	aggregateXSignatures(b, 100)
+}
+
+func BenchmarkAggregate1000Signatures(b *testing.B) {
+	aggregateXSignatures(b, 1000)
+}
+
+func BenchmarkVerifySingleSignature(b *testing.B) {
+	msg := randomMessage()
+	b.StopTimer()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		pk, sk, _ := GenKeyPair(rand.Reader)
+		signature, _ := Sign(sk, pk, msg)
+
+		b.StartTimer()
+		_ = Verify(NewApk(pk), msg, signature)
 		b.StopTimer()
+	}
+}
+
+func BenchmarkVerifyUnsafeSingleSignature(b *testing.B) {
+	msg := randomMessage()
+	b.StopTimer()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		pk, sk, _ := GenKeyPair(rand.Reader)
+		signature, _ := UnsafeSign(sk, msg)
+
+		b.StartTimer()
+		_ = VerifyUnsafe(pk, msg, signature)
+		b.StopTimer()
+	}
+}
+
+func BenchmarkVerifySingleCompressedSignature(b *testing.B) {
+	msg := randomMessage()
+	b.StopTimer()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
 		pk, sk, _ := GenKeyPair(rand.Reader)
 		signature, _ := Sign(sk, pk, msg)
 		sigb := signature.Compress()
 		apk := NewApk(pk)
-		b.StartTimer()
 
+		b.StartTimer()
 		signature = &Signature{}
 		_ = signature.Decompress(sigb)
 		_ = Verify(apk, msg, signature)
+		b.StopTimer()
 	}
 }
 
-func BenchmarkCompressedUnsafeSignature(b *testing.B) {
+func BenchmarkVerifySingleCompressedUnsafeSignature(b *testing.B) {
 	msg := randomMessage()
+	b.StopTimer()
+	b.ResetTimer()
+
 	for i := 0; i < b.N; i++ {
-		b.StopTimer()
 		pk, sk, _ := GenKeyPair(rand.Reader)
 		signature, _ := UnsafeSign(sk, msg)
 		sigb := signature.Compress()
+
 		b.StartTimer()
 		signature = &UnsafeSignature{}
 		_ = signature.Decompress(sigb)
 		_ = VerifyUnsafe(pk, msg, signature)
+		b.StopTimer()
 	}
 }
