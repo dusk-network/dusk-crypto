@@ -289,7 +289,23 @@ func TestAmbiguousCompress(t *testing.T) {
 	require.Fail(t, "Decompression failed both xy1 and xy2 are nil")
 }
 
-func BenchmarkSignature(b *testing.B) {
+func BenchmarkSign(b *testing.B) {
+	msg := randomMessage()
+	pk, sk, _ := GenKeyPair(rand.Reader)
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		b.StartTimer()
+		_, _ = Sign(sk, pk, msg)
+		b.StopTimer()
+		//if err := Verify(NewApk(pk), msg, sigma); err != nil {
+		//	panic(err)
+		//}
+
+	}
+}
+
+func BenchmarkVerify(b *testing.B) {
 	msg := randomMessage()
 	for i := 0; i < b.N; i++ {
 		b.StopTimer()
@@ -302,7 +318,7 @@ func BenchmarkSignature(b *testing.B) {
 	}
 }
 
-func BenchmarkUnsafeSignature(b *testing.B) {
+func BenchmarkVerifyUnsafe(b *testing.B) {
 	msg := randomMessage()
 	for i := 0; i < b.N; i++ {
 		b.StopTimer()
