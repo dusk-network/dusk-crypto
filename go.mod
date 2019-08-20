@@ -6,7 +6,7 @@ require (
 	github.com/OneOfOne/xxhash v1.2.5
 	github.com/bwesterb/go-ristretto v1.1.0
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/dusk-network/bn256 v0.0.0-20190820081542-693bb91dcae6
+	github.com/dusk-network/bn256 v0.0.0-20190820080919-adcd329b847a
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/pkg/errors v0.8.1
 	github.com/stretchr/testify v1.4.0

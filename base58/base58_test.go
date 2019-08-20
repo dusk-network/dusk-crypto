@@ -108,7 +108,7 @@ func BenchmarkEncoding(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		Encoding(testPairs[i].dec)
+		Encoding(testPairs[i%n].dec)
 	}
 }
 
@@ -117,6 +117,6 @@ func BenchmarkDecoding(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		Decoding(testPairs[i].enc)
+		Decoding(testPairs[i%n].enc)
 	}
 }
