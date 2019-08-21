@@ -6,8 +6,8 @@ github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/dusk-network/bn256 v0.0.0-20190821091231-8b9f40cd54a8 h1:Tf0dEhv9PdEBbwUSaU7qdf97hnudcMMcycyrr1LPnww=
-github.com/dusk-network/bn256 v0.0.0-20190821091231-8b9f40cd54a8/go.mod h1:KGkfDyf8GXeworEpuKRRfPGQa/CzezrYUGaaABueUhg=
+github.com/dusk-network/bn256 v0.5.0-lattices h1:3PWpy5mxJI7UNPdfjHzI3Mw2MhbZbHtk+31Agl3NCTg=
+github.com/dusk-network/bn256 v0.5.0-lattices/go.mod h1:KGkfDyf8GXeworEpuKRRfPGQa/CzezrYUGaaABueUhg=
 github.com/kr/pretty v0.1.0 h1:L/CwN0zerZDmRFUapSPitk6f+Q3+0za1rQkzVuMiMFI=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
