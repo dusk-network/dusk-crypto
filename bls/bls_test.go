@@ -291,12 +291,13 @@ func TestAmbiguousCompress(t *testing.T) {
 
 func BenchmarkSign(b *testing.B) {
 	msg := randomMessage()
+	pk, sk, _ := GenKeyPair(rand.Reader)
+
+	b.ReportAllocs()
 	b.StopTimer()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		pk, sk, _ := GenKeyPair(rand.Reader)
-
 		b.StartTimer()
 		_, _ = Sign(sk, pk, msg)
 		b.StopTimer()
@@ -314,6 +315,8 @@ func aggregateXSignatures(b *testing.B, nr int) {
 	}
 
 	s, sigmas := sigmas[0], sigmas[1:]
+
+	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		for _, sig := range sigmas {
@@ -336,11 +339,12 @@ func BenchmarkAggregate1000Signatures(b *testing.B) {
 
 func BenchmarkVerifySingleSignature(b *testing.B) {
 	msg := randomMessage()
+	pk, sk, _ := GenKeyPair(rand.Reader)
 	b.StopTimer()
 	b.ResetTimer()
+	b.ReportAllocs()
 
 	for i := 0; i < b.N; i++ {
-		pk, sk, _ := GenKeyPair(rand.Reader)
 		signature, _ := Sign(sk, pk, msg)
 
 		b.StartTimer()
