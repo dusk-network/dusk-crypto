@@ -8,6 +8,9 @@ import (
 	ristretto "github.com/bwesterb/go-ristretto"
 )
 
+// MerkleArity will define the maximum leaves per hash
+const MerkleArity = 2
+
 // Params represents the parameters for the hash calculation
 type Params struct {
 	Width               int
@@ -21,7 +24,7 @@ type Params struct {
 // Default will generate a default parametrization for Poseidon
 func Default() Params {
 	return Params{
-		Width:               5,
+		Width:               MerkleArity + 1,
 		FullRoundsBeginning: 4,
 		PartialRounds:       59,
 		FullRoundsEnd:       4,

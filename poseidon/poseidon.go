@@ -56,8 +56,8 @@ func (p *Poseidon) WriteScalar(s ristretto.Scalar) (int, error) {
 	return len(s), nil
 }
 
-// Sum will compute the Poseidon digest value. The usage of the bytes parameter is currently not implemented
-func (p *Poseidon) Sum(in []byte) []byte {
+// SumAsScalar will compute the hash and return the result as a scalar
+func (p *Poseidon) SumAsScalar() ristretto.Scalar {
 	p.Pad()
 
 	keysOffset := 0
@@ -74,7 +74,13 @@ func (p *Poseidon) Sum(in []byte) []byte {
 		p.applyFullRound(&keysOffset)
 	}
 
-	return p.input[1].Bytes()
+	return p.input[1]
+}
+
+// Sum will compute the Poseidon hash value. The usage of the bytes parameter is currently not implemented
+func (p *Poseidon) Sum(in []byte) []byte {
+	s := p.SumAsScalar()
+	return s.Bytes()
 }
 
 func (p *Poseidon) applyFullRound(keysOffset *int) {
