@@ -69,7 +69,7 @@ func Prove(v []ristretto.Scalar, debug bool) (Proof, error) {
 	ped.BaseVector.Compute(uint32((N * M)))
 
 	// Hash for Fiat-Shamir
-	hs := fiatshamir.HashCacher{[]byte{}}
+	hs := fiatshamir.HashCacher{Cache: []byte{}}
 
 	for _, amount := range v {
 		// compute commmitment to v
@@ -335,7 +335,7 @@ func Verify(p Proof) (bool, error) {
 	H := ped2.BaseVector.Bases
 
 	// Reconstruct the challenges
-	hs := fiatshamir.HashCacher{[]byte{}}
+	hs := fiatshamir.HashCacher{Cache: []byte{}}
 	for _, V := range p.V {
 		hs.Append(V.Value.Bytes())
 	}
@@ -492,6 +492,7 @@ func megacheckWithC(ipproof *innerproduct.Proof, mu, x, y, z, t, taux, w ristret
 	return true, nil
 }
 
+// Encode a Proof
 func (p *Proof) Encode(w io.Writer, includeCommits bool) error {
 
 	if includeCommits {
@@ -532,6 +533,7 @@ func (p *Proof) Encode(w io.Writer, includeCommits bool) error {
 	return p.IPProof.Encode(w)
 }
 
+// Decode a Proof
 func (p *Proof) Decode(r io.Reader, includeCommits bool) error {
 
 	if p == nil {
@@ -578,6 +580,7 @@ func (p *Proof) Decode(r io.Reader, includeCommits bool) error {
 	return p.IPProof.Decode(r)
 }
 
+// Equals returns proof equality with commitments
 func (p *Proof) Equals(other Proof, includeCommits bool) bool {
 	if len(p.V) != len(other.V) && includeCommits {
 		return false
@@ -619,7 +622,7 @@ func (p *Proof) Equals(other Proof, includeCommits bool) bool {
 		return ok
 	}
 	return true
-	return p.IPProof.Equals(*other.IPProof)
+	// return p.IPProof.Equals(*other.IPProof)
 }
 
 func readerToPoint(r io.Reader, p *ristretto.Point) error {
