@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"math/big"
+	"reflect"
 	"testing"
 
 	"github.com/dusk-network/bn256"
@@ -17,6 +18,28 @@ func randomMessage() []byte {
 	msg := make([]byte, 32)
 	_, _ = rand.Read(msg)
 	return msg
+}
+
+func TestCopyApk(t *testing.T) {
+	require := require.New(t)
+	pub, _, err := GenKeyPair(rand.Reader)
+	require.NoError(err)
+	apk := NewApk(pub)
+
+	cpy := apk.Copy()
+	require.True(reflect.DeepEqual(apk, cpy))
+}
+
+func TestCopySig(t *testing.T) {
+	require := require.New(t)
+	pub, priv, err := GenKeyPair(rand.Reader)
+	require.NoError(err)
+
+	sigma, err := Sign(priv, pub, []byte("ciao!!"))
+	require.NoError(err)
+
+	cpy := sigma.Copy()
+	require.True(reflect.DeepEqual(sigma, cpy))
 }
 
 // TestSignVerify

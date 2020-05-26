@@ -183,6 +183,20 @@ func NewApk(pk *PublicKey) *Apk {
 	}
 }
 
+// Copy the APK by marshalling and unmarshalling the internals. It is somewhat
+// wasteful but does the job
+func (apk *Apk) Copy() *Apk {
+	g2 := new(bn256.G2)
+	b := apk.gx.Marshal()
+	// no need to check errors. We deal with well formed APKs
+	_, _ = g2.Unmarshal(b)
+
+	cpy := &Apk{
+		PublicKey: &PublicKey{g2},
+	}
+	return cpy
+}
+
 // UnmarshalApk unmarshals a byte array into an aggregated PublicKey
 func UnmarshalApk(b []byte) (*Apk, error) {
 	apk := &Apk{
@@ -251,6 +265,17 @@ func UnmarshalSignature(sig []byte) (*Signature, error) {
 		return nil, err
 	}
 	return sigma, nil
+}
+
+// Copy (inefficiently) the Signature by unmarshaling and marshaling the
+// embedded G1
+func (sigma *Signature) Copy() *Signature {
+	b := sigma.e.Marshal()
+	s := &Signature{
+		e: new(bn256.G1),
+	}
+	_, _ = s.e.Unmarshal(b)
+	return s
 }
 
 // Add creates an aggregated signature from a normal BLS Signature and related public key
