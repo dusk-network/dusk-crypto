@@ -8,11 +8,30 @@ import (
 	"strconv"
 
 	"github.com/OneOfOne/xxhash"
+	"golang.org/x/crypto/blake2b"
 	"golang.org/x/crypto/sha3"
 )
 
 // Hash is a convenient alias of hash.Hash
 type Hash = hash.Hash
+
+// Blake2b256 performs a Blake2 hashing of a binary payload
+func Blake2b256(bs []byte) ([]byte, error) {
+	h, err := blake2b.New256(nil)
+	if err != nil {
+		return nil, err
+	}
+	return PerformHash(h, bs)
+}
+
+// Blake2b512 performs a Blake2 hashing of a binary payload
+func Blake2b512(bs []byte) ([]byte, error) {
+	h, err := blake2b.New512(nil)
+	if err != nil {
+		return nil, err
+	}
+	return PerformHash(h, bs)
+}
 
 // Sha3256 takes a byte slice
 // and returns the SHA3-256 hash
