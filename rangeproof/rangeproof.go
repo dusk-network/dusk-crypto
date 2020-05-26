@@ -580,7 +580,7 @@ func (p *Proof) Decode(r io.Reader, includeCommits bool) error {
 	return p.IPProof.Decode(r)
 }
 
-// Equals tests proof for equality
+// Equals returns proof equality with commitments
 func (p *Proof) Equals(other Proof, includeCommits bool) bool {
 	if len(p.V) != len(other.V) && includeCommits {
 		return false
@@ -622,7 +622,7 @@ func (p *Proof) Equals(other Proof, includeCommits bool) bool {
 		return ok
 	}
 	return true
-	//return p.IPProof.Equals(*other.IPProof)
+	// return p.IPProof.Equals(*other.IPProof)
 }
 
 func readerToPoint(r io.Reader, p *ristretto.Point) error {

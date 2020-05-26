@@ -390,7 +390,7 @@ func (proof *Proof) Verify(G, H, L, R []ristretto.Point, HprimeFactor []ristrett
 	return have.Equals(&P)
 }
 
-// Encode a proof
+// Encode a Proof
 func (proof *Proof) Encode(w io.Writer) error {
 
 	err := binary.Write(w, binary.BigEndian, proof.A.Bytes())
@@ -416,7 +416,7 @@ func (proof *Proof) Encode(w io.Writer) error {
 	return nil
 }
 
-// Decode a proof
+// Decode a Proof
 func (proof *Proof) Decode(r io.Reader) error {
 	if proof == nil {
 		return errors.New("struct is nil")
@@ -465,31 +465,27 @@ func (proof *Proof) Decode(r io.Reader) error {
 	return nil
 }
 
-// Equals tests for Equality two proofs
+// Equals test another proof for equality
 func (proof *Proof) Equals(other Proof) bool {
-	ok := proof.A.Equals(&other.A)
-	if !ok {
-		return ok
+	if ok := proof.A.Equals(&other.A); !ok {
+		return false
 	}
 
-	ok = proof.B.Equals(&other.B)
-	if !ok {
-		return ok
+	if ok := proof.B.Equals(&other.B); !ok {
+		return false
 	}
 
 	for i := range proof.L {
-		ok := proof.L[i].Equals(&other.L[i])
-		if !ok {
-			return ok
+		if ok := proof.L[i].Equals(&other.L[i]); !ok {
+			return false
 		}
 
-		ok = proof.R[i].Equals(&other.R[i])
-		if !ok {
-			return ok
+		if ok := proof.R[i].Equals(&other.R[i]); !ok {
+			return false
 		}
 	}
 
-	return ok
+	return true
 }
 
 func nextPow2(n uint) uint {
@@ -506,8 +502,8 @@ func isPower2(n uint32) bool {
 	return (n & (n - 1)) == 0
 }
 
-// DiffNextPow2 returns the difference between a given number and the next
-// power of two
+// DiffNextPow2 checks the closest next pow2 and returns the necessary padding
+// amount to get to the that
 func DiffNextPow2(n uint32) uint32 {
 	pow2 := nextPow2(uint(n))
 	padAmount := uint32(pow2) - n + 1
