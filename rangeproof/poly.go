@@ -6,7 +6,7 @@ import (
 	"github.com/pkg/errors"
 
 	ristretto "github.com/bwesterb/go-ristretto"
-	"github.com/dusk-network/dusk-crypto/rangeproof/vector"
+	"github.com/vosbor/dusk-crypto/rangeproof/vector"
 )
 
 // Polynomial construction

@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	ristretto "github.com/bwesterb/go-ristretto"
-	"github.com/dusk-network/dusk-crypto/rangeproof/pedersen"
-	"github.com/dusk-network/dusk-crypto/rangeproof/vector"
 	"github.com/stretchr/testify/assert"
+	"github.com/vosbor/dusk-crypto/rangeproof/pedersen"
+	"github.com/vosbor/dusk-crypto/rangeproof/vector"
 )
 
 func TestProofCreation(t *testing.T) {
@@ -72,7 +72,7 @@ func testHelpCreate(n uint32, t *testing.T) (ristretto.Point, []ristretto.Point,
 	var k2 ristretto.Point
 	var k3 ristretto.Point
 
-	genData := []byte("dusk.BulletProof.vec1")
+	genData := []byte("vosbor.BulletProof.v1")
 	ped := pedersen.New(genData)
 	ped.BaseVector.Compute(n)
 

@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	ristretto "github.com/bwesterb/go-ristretto"
-	"github.com/dusk-network/dusk-crypto/rangeproof/pedersen"
 	"github.com/stretchr/testify/assert"
+	"github.com/vosbor/dusk-crypto/rangeproof/pedersen"
 )
 
 func TestPedersenScalar(t *testing.T) {

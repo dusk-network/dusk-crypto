@@ -15,8 +15,8 @@ import (
 	"math/big"
 
 	"github.com/dusk-network/bn256"
-	"github.com/dusk-network/dusk-crypto/hash"
 	"github.com/pkg/errors"
+	"github.com/vosbor/dusk-crypto/hash"
 	"golang.org/x/crypto/sha3"
 )
 
