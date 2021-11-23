@@ -65,7 +65,7 @@ func generateProof(m int, t *testing.T) *Proof {
 
 	genData := []byte("vosbor.BulletProof.v1")
 	ped := pedersen.New(genData)
-	ped.BaseVector.Compute(uint32((m * N)))
+	ped.BaseVector.Compute(uint32((M * N)))
 
 	for i := 0; i < m; i++ {
 
@@ -105,6 +105,7 @@ func BenchmarkProve(b *testing.B) {
 	}
 
 }
+
 func BenchmarkVerify(b *testing.B) {
 
 	var amount ristretto.Scalar

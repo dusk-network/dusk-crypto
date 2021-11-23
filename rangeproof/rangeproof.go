@@ -73,7 +73,7 @@ func Prove(v []ristretto.Scalar, c []pedersen.Commitment, debug bool) (Proof, er
 
 	for _, commit := range c {
 		Vs = append(Vs, commit)
-		hs.Append(commit.Value.Bytes())
+		hs.Append(commit.Commit.Bytes())
 	}
 
 	aLs := make([]ristretto.Scalar, 0, N*M)
@@ -93,7 +93,7 @@ func Prove(v []ristretto.Scalar, c []pedersen.Commitment, debug bool) (Proof, er
 	S, sL, sR := computeS(ped)
 
 	// // update Fiat-Shamir
-	hs.Append(A.Value.Bytes(), S.Value.Bytes())
+	hs.Append(A.Commit.Bytes(), S.Commit.Bytes())
 
 	// compute y and z
 	y, z := computeYAndZ(hs)
@@ -109,7 +109,7 @@ func Prove(v []ristretto.Scalar, c []pedersen.Commitment, debug bool) (Proof, er
 	T2 := ped.CommitToScalar(poly.t2)
 
 	// update Fiat-Shamir
-	hs.Append(z.Bytes(), T1.Value.Bytes(), T2.Value.Bytes())
+	hs.Append(z.Bytes(), T1.Commit.Bytes(), T2.Commit.Bytes())
 
 	// compute x
 	x := computeX(hs)
@@ -191,10 +191,10 @@ func Prove(v []ristretto.Scalar, c []pedersen.Commitment, debug bool) (Proof, er
 
 	return Proof{
 		V:       Vs,
-		A:       A.Value,
-		S:       S.Value,
-		T1:      T1.Value,
-		T2:      T2.Value,
+		A:       A.Commit,
+		S:       S.Commit,
+		T1:      T1.Commit,
+		T2:      T2.Commit,
 		t:       t,
 		taux:    taux,
 		mu:      mu,
@@ -332,7 +332,7 @@ func Verify(p Proof) (bool, error) {
 	// Reconstruct the challenges
 	hs := fiatshamir.HashCacher{Cache: []byte{}}
 	for _, V := range p.V {
-		hs.Append(V.Value.Bytes())
+		hs.Append(V.Commit.Bytes())
 	}
 
 	hs.Append(p.A.Bytes(), p.S.Bytes())
@@ -451,7 +451,7 @@ func megacheckWithC(ipproof *innerproduct.Proof, mu, x, y, z, t, taux, w ristret
 	c9.SetZero()
 	for i := range zM {
 		var temp ristretto.Point
-		temp.PublicScalarMult(&V[i].Value, &zM[i])
+		temp.PublicScalarMult(&V[i].Commit, &zM[i])
 		c9.Add(&c9, &temp)
 	}
 

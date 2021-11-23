@@ -42,15 +42,16 @@ func New(genData []byte) *Pedersen {
 // Commitment represents a Pedersen Commitment
 // storing the value and the random blinding factor
 type Commitment struct {
-	// Value is the point which has been commited to
-	Value ristretto.Point
+	// Commit is the point which hides the value
+	Commit ristretto.Point
 	// blinding factor is the blinding scalar.
 	// Note that n vectors have 1 blinding factor
+	// It behaves like a key
 	BlindingFactor ristretto.Scalar
 }
 
 func (c *Commitment) Encode(w io.Writer) error {
-	return binary.Write(w, binary.BigEndian, c.Value.Bytes())
+	return binary.Write(w, binary.BigEndian, c.Commit.Bytes())
 }
 
 func EncodeCommitments(w io.Writer, comms []Commitment) error {
@@ -78,7 +79,7 @@ func (c *Commitment) Decode(r io.Reader) error {
 	if err != nil {
 		return err
 	}
-	ok := c.Value.SetBytes(&cBytes)
+	ok := c.Commit.SetBytes(&cBytes)
 	if !ok {
 		return errors.New("could not set bytes for commitment, not an encodable point")
 	}
@@ -106,7 +107,7 @@ func DecodeCommitments(r io.Reader) ([]Commitment, error) {
 }
 
 func (c *Commitment) EqualValue(other Commitment) bool {
-	return c.Value.Equals(&other.Value)
+	return c.Commit.Equals(&other.Commit)
 }
 
 func (c *Commitment) Equals(other Commitment) bool {
@@ -170,7 +171,7 @@ func (p *Pedersen) CommitToScalar(v ristretto.Scalar) Commitment {
 	sum.Add(&vBase, &blindPoint)
 
 	return Commitment{
-		Value:          sum,
+		Commit:         sum,
 		BlindingFactor: blind,
 	}
 }
@@ -206,7 +207,7 @@ func (p *Pedersen) CommitToVectors(vectors ...[]ristretto.Scalar) Commitment {
 	}
 
 	return Commitment{
-		Value:          sum,
+		Commit:         sum,
 		BlindingFactor: blind,
 	}
 }
