@@ -9,10 +9,10 @@ import (
 	"github.com/pkg/errors"
 
 	ristretto "github.com/bwesterb/go-ristretto"
-	"github.com/dusk-network/dusk-crypto/rangeproof/fiatshamir"
-	"github.com/dusk-network/dusk-crypto/rangeproof/innerproduct"
-	"github.com/dusk-network/dusk-crypto/rangeproof/pedersen"
-	"github.com/dusk-network/dusk-crypto/rangeproof/vector"
+	"github.com/vosbor/dusk-crypto/rangeproof/fiatshamir"
+	"github.com/vosbor/dusk-crypto/rangeproof/innerproduct"
+	"github.com/vosbor/dusk-crypto/rangeproof/pedersen"
+	"github.com/vosbor/dusk-crypto/rangeproof/vector"
 )
 
 // N is number of bits in range
@@ -42,7 +42,7 @@ type Proof struct {
 }
 
 // Prove will take a set of scalars as a parameter and prove that it is [0, 2^N)
-func Prove(v []ristretto.Scalar, debug bool) (Proof, error) {
+func Prove(v []ristretto.Scalar, c []pedersen.Commitment, debug bool) (Proof, error) {
 
 	if len(v) < 1 {
 		return Proof{}, errors.New("length of slice v is zero")
@@ -64,21 +64,16 @@ func Prove(v []ristretto.Scalar, debug bool) (Proof, error) {
 
 	// commitment to values v
 	Vs := make([]pedersen.Commitment, 0, M)
-	genData := []byte("dusk.BulletProof.vec1")
+	genData := []byte("vosbor.BulletProof.v1")
 	ped := pedersen.New(genData)
 	ped.BaseVector.Compute(uint32((N * M)))
 
 	// Hash for Fiat-Shamir
 	hs := fiatshamir.HashCacher{Cache: []byte{}}
 
-	for _, amount := range v {
-		// compute commmitment to v
-		V := ped.CommitToScalar(amount)
-
-		Vs = append(Vs, V)
-
-		// update Fiat-Shamir
-		hs.Append(V.Value.Bytes())
+	for _, commit := range c {
+		Vs = append(Vs, commit)
+		hs.Append(commit.Commit.Bytes())
 	}
 
 	aLs := make([]ristretto.Scalar, 0, N*M)
@@ -98,7 +93,7 @@ func Prove(v []ristretto.Scalar, debug bool) (Proof, error) {
 	S, sL, sR := computeS(ped)
 
 	// // update Fiat-Shamir
-	hs.Append(A.Value.Bytes(), S.Value.Bytes())
+	hs.Append(A.Commit.Bytes(), S.Commit.Bytes())
 
 	// compute y and z
 	y, z := computeYAndZ(hs)
@@ -114,7 +109,7 @@ func Prove(v []ristretto.Scalar, debug bool) (Proof, error) {
 	T2 := ped.CommitToScalar(poly.t2)
 
 	// update Fiat-Shamir
-	hs.Append(z.Bytes(), T1.Value.Bytes(), T2.Value.Bytes())
+	hs.Append(z.Bytes(), T1.Commit.Bytes(), T2.Commit.Bytes())
 
 	// compute x
 	x := computeX(hs)
@@ -196,10 +191,10 @@ func Prove(v []ristretto.Scalar, debug bool) (Proof, error) {
 
 	return Proof{
 		V:       Vs,
-		A:       A.Value,
-		S:       S.Value,
-		T1:      T1.Value,
-		T2:      T2.Value,
+		A:       A.Commit,
+		S:       S.Commit,
+		T1:      T1.Commit,
+		T2:      T2.Commit,
 		t:       t,
 		taux:    taux,
 		mu:      mu,
@@ -322,7 +317,7 @@ func computeHprime(H []ristretto.Point, y ristretto.Scalar) []ristretto.Point {
 // Verify takes a bullet proof and returns true only if the proof was valid
 func Verify(p Proof) (bool, error) {
 
-	genData := []byte("dusk.BulletProof.vec1")
+	genData := []byte("vosbor.BulletProof.v1")
 	ped := pedersen.New(genData)
 	ped.BaseVector.Compute(uint32(N * M))
 
@@ -337,7 +332,7 @@ func Verify(p Proof) (bool, error) {
 	// Reconstruct the challenges
 	hs := fiatshamir.HashCacher{Cache: []byte{}}
 	for _, V := range p.V {
-		hs.Append(V.Value.Bytes())
+		hs.Append(V.Commit.Bytes())
 	}
 
 	hs.Append(p.A.Bytes(), p.S.Bytes())
@@ -456,7 +451,7 @@ func megacheckWithC(ipproof *innerproduct.Proof, mu, x, y, z, t, taux, w ristret
 	c9.SetZero()
 	for i := range zM {
 		var temp ristretto.Point
-		temp.PublicScalarMult(&V[i].Value, &zM[i])
+		temp.PublicScalarMult(&V[i].Commit, &zM[i])
 		c9.Add(&c9, &temp)
 	}
 

@@ -6,9 +6,9 @@ import (
 	"github.com/pkg/errors"
 
 	ristretto "github.com/bwesterb/go-ristretto"
-	"github.com/dusk-network/dusk-crypto/rangeproof/vector"
+	"github.com/vosbor/dusk-crypto/rangeproof/vector"
 
-	"github.com/dusk-network/dusk-crypto/rangeproof/pedersen"
+	"github.com/vosbor/dusk-crypto/rangeproof/pedersen"
 )
 
 // Put all debug functions here
@@ -71,7 +71,7 @@ func debugLxG(l []ristretto.Scalar, x, z ristretto.Scalar, aL, aR, sL []ristrett
 	var P ristretto.Point
 	P.SetZero()
 
-	genData := []byte("dusk.BulletProof.vec1")
+	genData := []byte("vosbor.BulletProof.v1")
 	ped := pedersen.New(genData)
 	ped.BaseVector.Compute(uint32((N * M)))
 
@@ -112,7 +112,7 @@ func debugLxG(l []ristretto.Scalar, x, z ristretto.Scalar, aL, aR, sL []ristrett
 // < r(x), H'> = <aR, H> + x<sR, H> + <z*y^(n*m), H'> + sum( (< <z^(j+1),2^n>, H') ) from j = 1 to j = m
 func debugRxHPrime(r []ristretto.Scalar, x, y, z ristretto.Scalar, aR, sR []ristretto.Scalar) (bool, error) {
 
-	genData := []byte("dusk.BulletProof.vec1")
+	genData := []byte("vosbor.BulletProof.v1")
 
 	genData = append(genData, uint8(1))
 

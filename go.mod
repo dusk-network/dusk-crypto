@@ -1,4 +1,4 @@
-module github.com/dusk-network/dusk-crypto
+module github.com/vosbor/dusk-crypto
 
 go 1.12
 
@@ -7,6 +7,7 @@ require (
 	github.com/bwesterb/go-ristretto v1.1.0
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dusk-network/bn256 v0.5.1-lattices
+	github.com/dusk-network/dusk-crypto v0.1.3
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/pkg/errors v0.8.1
 	github.com/stretchr/testify v1.4.0
