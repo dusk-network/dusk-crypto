@@ -9,7 +9,7 @@ import (
 	ristretto "github.com/bwesterb/go-ristretto"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/vosbor/dusk-crypto/rangeproof/pedersen"
+	"github.com/dusk-network/dusk-crypto/rangeproof/pedersen"
 )
 
 func TestProveBulletProof(t *testing.T) {
