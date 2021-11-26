@@ -4,7 +4,7 @@ import (
 	"math/big"
 
 	ristretto "github.com/bwesterb/go-ristretto"
-	"github.com/vosbor/dusk-crypto/rangeproof/pedersen"
+	"github.com/dusk-network/dusk-crypto/rangeproof/pedersen"
 )
 
 type Commitment struct {
