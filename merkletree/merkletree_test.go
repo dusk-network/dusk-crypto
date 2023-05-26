@@ -76,6 +76,97 @@ var testTable = []Fixture{
 	{
 		Payloads: []Payload{
 			TestPayload{
+				x: "Bella",
+			},
+			TestPayload{
+				x: "Ciao",
+			},
+			TestPayload{
+				x: "Ndo",
+			},
+			TestPayload{
+				x: "Scappi",
+			},
+			TestPayload{
+				x: "Stop",
+			},
+			TestPayload{
+				x: "Pari",
+			},
+		},
+		ExpectedHash: []byte{
+			232, 216, 240, 248, 181, 80, 60, 110, 63, 103, 197, 226, 130, 128, 226, 245, 173, 218, 140, 195, 246, 109, 134, 119, 4, 192, 166, 120, 163, 2, 95, 230,
+		},
+	},
+
+	{
+		Payloads: []Payload{
+			TestPayload{
+				x: "Bella",
+			},
+			TestPayload{
+				x: "Ciao",
+			},
+			TestPayload{
+				x: "Ndo",
+			},
+			TestPayload{
+				x: "Scappi",
+			},
+			TestPayload{
+				x: "Stop",
+			},
+		},
+		ExpectedHash: []byte{
+			254, 132, 247, 13, 76, 173, 142, 94, 29, 216, 48, 25, 120, 142, 205, 65, 160, 88, 186, 233, 10, 143, 123, 79, 53, 22, 24, 55, 47, 130, 228, 238,
+		},
+	},
+
+	{
+		Payloads: []Payload{
+			TestPayload{
+				x: "Bella",
+			},
+		},
+		ExpectedHash: []byte{
+			21, 37, 141, 144, 92, 108, 151, 168, 167, 108, 172, 79, 204, 99, 154, 196, 242, 247, 38, 145, 254, 228, 141, 104, 75, 210, 148, 101, 74, 166, 1, 65,
+		},
+	},
+
+	{
+		Payloads: []Payload{
+			TestPayload{
+				x: "Bella",
+			},
+			TestPayload{
+				x: "Ciao",
+			},
+		},
+		ExpectedHash: []byte{
+			51, 101, 184, 162, 4, 3, 146, 102, 116, 250, 26, 17, 70, 19, 161, 207, 164, 139, 77, 55, 143, 221, 170, 91, 220, 236, 149, 89, 207, 220, 250, 249,
+		},
+	},
+
+	{
+		Payloads: []Payload{
+			TestPayload{
+				x: "Bella",
+			},
+			TestPayload{
+				x: "Ciao",
+			},
+			TestPayload{
+				x: "Stop",
+			},
+		},
+		ExpectedHash: []byte{
+			237, 79, 47, 121, 34, 152, 157, 123, 29, 245, 148, 185, 242, 38, 186, 47, 27, 182, 232, 127, 84, 7, 77, 127, 146, 196, 83, 8, 245, 190, 21, 5,
+		},
+	},
+
+	{
+		Payloads: []Payload{
+			TestPayload{
 				x: "Hello",
 			},
 			TestPayload{
